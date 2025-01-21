@@ -1,36 +1,39 @@
-import requests
-from bs4 import BeautifulSoup
 from flask import Flask, jsonify
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+import time
 
 app = Flask(__name__)
 
-def get_lowest_price():
-    url = "https://csfloat.com/search?sort_by=lowest_price&def_index=4726"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-    }
+def get_first_lowest_price():
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
-    response = requests.get(url, headers=headers)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
-        price_element = soup.select_one('div.price.ng-star-inserted')
-        
-        if price_element:
-            lowest_price = price_element.get_text(strip=True)
-            return f"{lowest_price}"
-        else:
-            return "Price not found"
-    else:
-        return "Error fetching price"
+    try:
+        url = "https://csfloat.com/search?sort_by=lowest_price&def_index=4726"
+        driver.get(url)
 
-@app.route('/')
-def home():
-    return "Flask app is running!"
+        time.sleep(5)
+
+        price_element = driver.find_element(By.CSS_SELECTOR, "div.price.ng-star-inserted")
+        first_price = price_element.text.strip()
+
+        return f"First lowest price: {first_price}"
+
+    except Exception as e:
+        return f"Error fetching price: {str(e)}"
+
+    finally:
+        driver.quit()
 
 @app.route('/csfloat')
 def csfloat_price():
-    return jsonify({"lowest_price": get_lowest_price()})
+    return jsonify({"lowest_price": get_first_lowest_price()})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080)
