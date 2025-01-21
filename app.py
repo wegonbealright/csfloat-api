@@ -1,15 +1,30 @@
 import requests
+from bs4 import BeautifulSoup
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 def get_lowest_price():
     url = "https://csfloat.com/search?sort_by=lowest_price&def_index=4726"
-    response = requests.get(url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+    }
+
+    response = requests.get(url, headers=headers)
+
     if response.status_code == 200:
-        # Extract the lowest price from the response (adjust this parsing logic)
-        return "Lowest price: €XX.XX"
-    return "Error fetching price"
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        # Inspect the webpage and replace 'price-class' with actual class found on the page
+        price_element = soup.find('div', class_='price-class')  # Example class, inspect and replace
+
+        if price_element:
+            lowest_price = price_element.get_text(strip=True)
+            return f"Lowest price: {lowest_price}"
+        else:
+            return "Price not found"
+    else:
+        return "Error fetching price"
 
 @app.route('/csfloat')
 def csfloat_price():
