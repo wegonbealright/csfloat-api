@@ -18,7 +18,7 @@ def get_lowest_price():
 
         if price_element:
             lowest_price = price_element.get_text(strip=True)
-            return f"Lowest price: {lowest_price}"
+            return f"{lowest_price}"
         else:
             return "Price not found"
     else:
