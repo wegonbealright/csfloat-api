@@ -14,7 +14,7 @@ def get_lowest_price():
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        price_element = soup.find('div', class_='price ng-star-inserted')
+        price_element = soup.select_one('div.price.ng-star-inserted')
         
         if price_element:
             lowest_price = price_element.get_text(strip=True)
