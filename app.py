@@ -8,7 +8,7 @@ def get_lowest_price():
     response = requests.get(url)
     if response.status_code == 200:
         # Extract the lowest price from the response (adjust this parsing logic)
-        return "Lowest price: $XX.XX"
+        return "Lowest price: €XX.XX"
     return "Error fetching price"
 
 @app.route('/csfloat')
