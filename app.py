@@ -14,9 +14,7 @@ def get_lowest_price():
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'lxml')
-
-        # Inspect the webpage and replace 'price-class' with actual class found on the page
-        price_element = soup.find('div', class_='price-class')  # Example class, inspect and replace
+        price_element = soup.find('div', class_='price-class')
 
         if price_element:
             lowest_price = price_element.get_text(strip=True)
