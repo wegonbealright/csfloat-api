@@ -35,7 +35,7 @@ def get_lowest_price():
             if isinstance(price_cents, (int, float)):
                 price_usd = price_cents / 100
                 price_eur = convert_usd_to_eur(price_usd)
-                return {"price_eur": price_eur}
+                return price_eur
             else:
                 return {"error": "Invalid price format from API"}
 
@@ -62,7 +62,7 @@ def convert_usd_to_eur(usd_amount):
 @app.route('/csfloat_price')
 def csfloat_price():
     lowest_price = get_lowest_price()
-    return jsonify(lowest_price)
+    return lowest_price
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
