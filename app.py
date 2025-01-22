@@ -11,6 +11,7 @@ def get_lowest_price():
     params = {
         "limit": 40,
         "sort_by": "lowest_price",
+        "type":"buy_now",
         "def_index": 4726
     }
 
