@@ -1,9 +1,11 @@
 import requests
+import os
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 CSFLOAT_API_URL = "https://csfloat.com/api/v1/listings"
+API_KEY = os.getenv("API_KEY")
 
 def get_lowest_price():
     params = {
@@ -13,7 +15,7 @@ def get_lowest_price():
     }
 
     headers = {
-        "Authorization": "F40li3QQ91-4HnGf4c1HDRqxgd-RxKWG",
+        "Authorization": API_KEY,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
         "Accept": "application/json",
         "Referer": "https://csfloat.com/"
